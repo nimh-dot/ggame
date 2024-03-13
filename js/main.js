@@ -1,5 +1,6 @@
 import { Canvas } from './Canvas.js';
 import { Ball } from './Ball.js';
+import { Paddle } from './Paddle.js';
 import { keyDownHandler, keyUpHandler } from './keyboard.js'
 
 const RADIUS = 10;
@@ -12,36 +13,32 @@ const canvas = new Canvas(canvasWrapper);
 
 const paddleWidth = 100
 const paddleHeight = 10
-let paddleX = (width - paddleWidth) / 2
 
-let x = ~~(width / 2);
-let y = height - paddleHeight - RADIUS;
-const ball = new Ball(x, y, RADIUS, 2, -2)
+const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 2, -2)
+const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight)
 
 canvas.drawBall(ball);
-canvas.drawPaddle(paddleX, height - paddleHeight, paddleWidth, paddleHeight);
+canvas.drawPaddle(paddle);
 
-let horizontal = { left: false, right: false }
+let directionState = { left: false, right: false }
 
 function draw() {
     canvas.clear()
     ball.update(canvas.ctx.width, canvas.ctx.height)
     canvas.drawBall(ball);
-
-    if (horizontal.right) {
-        paddleX = Math.min(width - paddleWidth, paddleX + 6);
-    } else if (horizontal.left) {
-        paddleX = Math.max(0, paddleX - 6);
-    }
-
-    canvas.drawPaddle(paddleX, height - paddleHeight, paddleWidth, paddleHeight);
+    paddle.update(directionState, canvas.ctx.width)
+    canvas.drawPaddle(paddle);
 }
 
 function startGame() {
     const interval = setInterval(draw, 10);
 }
 
-document.addEventListener("keydown", (e) => { horizontal = keyDownHandler(e, horizontal) }, false);
-document.addEventListener("keyup", (e) => { horizontal = keyUpHandler(e, horizontal) }, false);
+document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);
+document.addEventListener("keyup", (e) => { directionState = keyUpHandler(e, directionState) }, false);
 
-canvasWrapper.addEventListener('click', () => startGame());
+document.addEventListener('keyup', (e) => {
+    if (e.key == " " || e.code == "Space" || e.keyCode == 32 ) {
+        startGame()
+    }
+});

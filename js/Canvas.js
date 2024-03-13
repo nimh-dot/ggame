@@ -16,9 +16,9 @@ export class Canvas {
         this.canvas.fill();
     }
 
-    drawPaddle(x, y, dx, dy) {
+    drawPaddle(item) {
         this.canvas.beginPath();
-        this.canvas.rect(x, y, dx, dy);
+        this.canvas.rect(item.x, item.y, item.width, item.height);
         this.canvas.fillStyle = `#8d7370`;
         this.canvas.fill();
         this.canvas.closePath();
@@ -26,9 +26,5 @@ export class Canvas {
 
     clear() {
         this.canvas.clearRect(0, 0, this.ctx.width, this.ctx.height)
-    }
-
-    update() {
-        this.clear()
     }
 }
