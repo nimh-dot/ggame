@@ -16,6 +16,7 @@ export class Ball {
         if (this.position.y + this.velocity.dy > height - this.radius) {
             if (this.position.x < paddleX || this.position.x > paddleX + paddleWidth) {
                 onStop(intervalID);
+            }
             this.velocity.dy = -this.velocity.dy;
         } else if ((this.position.y + this.velocity.dy < this.radius)) {
             this.velocity.dy = -this.velocity.dy;
