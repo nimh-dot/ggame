@@ -11,6 +11,8 @@ canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
+let intervalID = null
+
 const paddleWidth = 100
 const paddleHeight = 10
 
@@ -24,14 +26,14 @@ let directionState = { left: false, right: false }
 
 function draw() {
     canvas.clear()
-    ball.update(canvas.ctx.width, canvas.ctx.height)
+    ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width)
     canvas.drawBall(ball);
     paddle.update(directionState, canvas.ctx.width)
     canvas.drawPaddle(paddle);
 }
 
 function startGame() {
-    const interval = setInterval(draw, 10);
+    intervalID = setInterval(draw, 10);
 }
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);
@@ -39,6 +41,14 @@ document.addEventListener("keyup", (e) => { directionState = keyUpHandler(e, dir
 
 document.addEventListener('keyup', (e) => {
     if (e.key == " " || e.code == "Space" || e.keyCode == 32 ) {
-        startGame()
+        if (intervalID) {
+            onStop(intervalID)
+            intervalID = null
+        }
+        else {
+            startGame()
+        }
     }
 });
+
+export const onStop = (intervalID) => clearInterval(intervalID)
