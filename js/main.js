@@ -1,24 +1,26 @@
 import { Canvas } from './Canvas.js';
 import { Ball } from './Ball.js';
 import { Paddle } from './Paddle.js';
-import { keyDownHandler, keyUpHandler } from './keyboard.js'
+import { keyDownHandler, keyUpHandler } from './keyboard.js';
+import { debounce } from './utils.js';
 
 const RADIUS = 10;
 let canvasWrapper = document.getElementById('canvas-wrapper');
-let width = window.innerWidth * 0.9
-let height = window.innerHeight * 0.7
+let width = window.innerWidth * 0.9;
+let height = window.innerHeight * 0.7;
 canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
-let intervalID = null
+let intervalID = null;
 
-const paddleWidth = 100
-const paddleHeight = 10
+const paddleWidth = 120;
+const paddleHeight = 12;
 
-const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 2, -2)
-const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight)
-
+const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 2, -2);
+const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
+const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
+const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
 
 import { LEVELS } from './levels.js';
 const bricks = LEVELS[0].map((coords) => {
@@ -30,16 +32,16 @@ bricks.forEach((brick) => {canvas.drawPaddle(brick)})
 canvas.drawBall(ball);
 canvas.drawPaddle(paddle);
 
-let directionState = { left: false, right: false }
+let directionState = { left: false, right: false };
 
 function draw() {
-    canvas.clear()
-    bricks.forEach((brick) => {canvas.drawPaddle(brick)})
+    canvas.clear();
+    bricks.forEach((brick) => {canvas.drawPaddle(brick)});
 
-    ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width)
+    ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width);
     canvas.drawBall(ball);
 
-    paddle.update(directionState, canvas.ctx.width)
+    paddle.update(directionState, canvas.ctx.width);
     canvas.drawPaddle(paddle);
 }
 
@@ -49,17 +51,22 @@ function startGame() {
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);
 document.addEventListener("keyup", (e) => { directionState = keyUpHandler(e, directionState) }, false);
+document.addEventListener("mousemove", (e) => {
+    if (e.pageX >= paddleStartX && e.pageX <= paddleEndX) {
+        paddle.x = e.pageX - paddle.width;
+    }
+}, false);
 
 document.addEventListener('keyup', (e) => {
     if (e.key == " " || e.code == "Space" || e.keyCode == 32 ) {
         if (intervalID) {
-            onStop(intervalID)
-            intervalID = null
+            onStop(intervalID);
+            intervalID = null;
         }
         else {
-            startGame()
+            startGame();
         }
     }
 });
 
-export const onStop = (intervalID) => clearInterval(intervalID)
+export const onStop = (intervalID) => clearInterval(intervalID);
