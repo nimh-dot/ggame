@@ -12,8 +12,6 @@ canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
-let intervalID = null;
-
 const paddleWidth = 120;
 const paddleHeight = 12;
 
@@ -22,12 +20,13 @@ const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, padd
 const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
 const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
 
-import { LEVELS } from './levels.js';
-const bricks = LEVELS[0].map((coords) => {
-    return new Paddle(coords[0], coords[1], paddleWidth, paddleHeight)
-})
+// bricks layout by levels
+import { createLevelBricks } from './levels.js';
 
-bricks.forEach((brick) => {canvas.drawPaddle(brick)})
+let curLevel = 0;
+let bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
+
+bricks.forEach((brick) => { canvas.drawPaddle(brick) });
 
 canvas.drawBall(ball);
 canvas.drawPaddle(paddle);
@@ -36,18 +35,20 @@ let directionState = { left: false, right: false };
 
 function draw() {
     canvas.clear();
-    bricks.forEach((brick) => {canvas.drawPaddle(brick)});
+    bricks.forEach((brick) => { canvas.drawPaddle(brick) });
 
     ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width);
     canvas.drawBall(ball);
 
     paddle.update(directionState, canvas.ctx.width);
     canvas.drawPaddle(paddle);
-}
+};
+
+let intervalID = null;
 
 function startGame() {
     intervalID = setInterval(draw, 10);
-}
+};
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);
 document.addEventListener("keyup", (e) => { directionState = keyUpHandler(e, directionState) }, false);
@@ -58,7 +59,7 @@ document.addEventListener("mousemove", (e) => {
 }, false);
 
 document.addEventListener('keyup', (e) => {
-    if (e.key == " " || e.code == "Space" || e.keyCode == 32 ) {
+    if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
         if (intervalID) {
             onStop(intervalID);
             intervalID = null;
