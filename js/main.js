@@ -12,10 +12,10 @@ canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
-const paddleWidth = 150;
-const paddleHeight = 15;
+const paddleWidth = 220;
+const paddleHeight = 20;
 
-const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 10, -10);
+const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 3, -3);
 const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
 const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
 const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
@@ -43,7 +43,7 @@ function draw() {
         curLevel++;
         bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
     }
-    ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width);
+    ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle);
     canvas.drawBall(ball);
     paddle.update(directionState, canvas.ctx.width);
     canvas.drawPaddle(paddle);
@@ -52,7 +52,7 @@ function draw() {
 let intervalID = null;
 
 function startGame() {
-    intervalID = setInterval(draw, 20);
+    intervalID = setInterval(draw, 6);
 };
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);

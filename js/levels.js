@@ -5,7 +5,6 @@ const LEVELS =   [  [[1,1,1,1,0,1,0,1,1,1],
                     [1,0,1,1,0,1,0,1,0,1],
                     [1,1,1,1,0,1,0,1,1,1],
                     [1,1,1,1,0,1,0,1,1,1]]
-                             //second level
                  ];
 
 export const createLevelBricks = (level, canvasWidth, canvasHeight) => {
