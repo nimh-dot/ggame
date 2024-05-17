@@ -27,4 +27,25 @@ export class Ball {
             y: this.position.y + this.velocity.dy
         };
     }
+
+    updateBrick(brick){
+        let flag = false;
+        let deltaX = 0;
+        let deltaY = 0;
+        if (this.position.y + this.velocity.dy > brick.y - this.radius && this.position.y + this.velocity.dy < brick.y + brick.height){
+            deltaY = Math.max(this.position.y + this.velocity.dy - (brick.y - this.radius), (brick.y + brick.height) - (this.position.y + this.velocity.dy - this.radius))
+        }
+
+        if (this.position.x + this.velocity.dx > brick.x - this.radius && this.position.x + this.velocity.dx < brick.x + brick.width){
+            deltaX = Math.max(this.position.x + this.velocity.dx - (brick.x - this.radius), (brick.x + brick.width) - (this.position.x + this.velocity.dx - this.radius))
+        }
+
+        if (deltaX && deltaY){
+            flag = true;
+            if (deltaX >= deltaY) this.velocity.dy = -this.velocity.dy;
+            else this.velocity.dx = -this.velocity.dx;
+        }
+
+        return flag
+    }
 }

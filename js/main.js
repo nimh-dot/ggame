@@ -12,10 +12,10 @@ canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
-const paddleWidth = 120;
-const paddleHeight = 12;
+const paddleWidth = 150;
+const paddleHeight = 15;
 
-const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 2, -2);
+const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 4, -4);
 const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
 const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
 const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
@@ -35,11 +35,12 @@ let directionState = { left: false, right: false };
 
 function draw() {
     canvas.clear();
-    bricks.forEach((brick) => { canvas.drawPaddle(brick) });
-
+    bricks.forEach((brick, index) => {
+        canvas.drawPaddle(brick);
+        if (ball.updateBrick(brick)) bricks.splice(index, 1);
+    });
     ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width);
     canvas.drawBall(ball);
-
     paddle.update(directionState, canvas.ctx.width);
     canvas.drawPaddle(paddle);
 };
