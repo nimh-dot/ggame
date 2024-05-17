@@ -4,9 +4,8 @@ const LEVELS =   [  [[1,1,1,1,0,1,0,1,1,1],
                     [1,1,1,1,0,1,0,1,1,1],
                     [1,0,1,1,0,1,0,1,0,1],
                     [1,1,1,1,0,1,0,1,1,1],
-                    [1,1,1,1,0,1,0,1,1,1]],
+                    [1,1,1,1,0,1,0,1,1,1]]
                              //second level
-                    []
                  ];
 
 export const createLevelBricks = (level, canvasWidth, canvasHeight) => {
@@ -21,10 +20,14 @@ export const createLevelBricks = (level, canvasWidth, canvasHeight) => {
 
     for (let i = 0; i < maxBricksRow; i++) {
         for (let j = 0; j < maxBricksCol; j++) {
-            if (LEVELS[level][i][j]) {
-                const brick = new Paddle( colOffset * 3 + j * colOffset + j * brickWidth,
-                                        rowOffset * 3 + i * rowOffset + i * brickHeight, brickWidth, brickHeight);
-                bricks.push(brick);
+            let brick;
+            if (level >= LEVELS.length) {
+                brick = Math.round(Math.random());
+            }
+            else brick = LEVELS[level][i][j];
+            if (brick) {
+                bricks.push(new Paddle( colOffset * 3 + j * colOffset + j * brickWidth,
+                                        rowOffset * 3 + i * rowOffset + i * brickHeight, brickWidth, brickHeight));
             }
         }
     };

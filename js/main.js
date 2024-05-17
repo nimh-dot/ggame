@@ -15,7 +15,7 @@ const canvas = new Canvas(canvasWrapper);
 const paddleWidth = 150;
 const paddleHeight = 15;
 
-const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 4, -4);
+const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 10, -10);
 const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
 const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
 const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
@@ -23,7 +23,7 @@ const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
 // bricks layout by levels
 import { createLevelBricks } from './levels.js';
 
-let curLevel = 0;
+let curLevel = 1;
 let bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
 
 bricks.forEach((brick) => { canvas.drawPaddle(brick) });
@@ -39,6 +39,10 @@ function draw() {
         canvas.drawPaddle(brick);
         if (ball.updateBrick(brick)) bricks.splice(index, 1);
     });
+    if (!bricks.length) {
+        curLevel++;
+        bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
+    }
     ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle.x, paddle.width);
     canvas.drawBall(ball);
     paddle.update(directionState, canvas.ctx.width);
@@ -48,7 +52,7 @@ function draw() {
 let intervalID = null;
 
 function startGame() {
-    intervalID = setInterval(draw, 10);
+    intervalID = setInterval(draw, 20);
 };
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);

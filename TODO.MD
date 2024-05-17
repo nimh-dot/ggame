@@ -3,3 +3,5 @@
 3. ball collision detection with bricks
 4. generating a random level layout
 5. check onStop in class Ball.
+6. change the rebound angle
+7. remove flashing when updating
