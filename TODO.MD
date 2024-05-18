@@ -5,3 +5,4 @@
 5. check onStop in class Ball.
 6. change the rebound angle
 7. remove flashing when updating
+8. counting the score and levels

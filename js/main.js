@@ -23,13 +23,17 @@ const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
 // bricks layout by levels
 import { createLevelBricks } from './levels.js';
 
-let curLevel = 1;
+let score = 0;
+let curLevel = 0;
+let record = 0;
 let bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
 
 bricks.forEach((brick) => { canvas.drawPaddle(brick) });
 
 canvas.drawBall(ball);
 canvas.drawPaddle(paddle);
+canvas.drawNumberOfLevel(curLevel);
+canvas.drawScore(score);
 
 let directionState = { left: false, right: false };
 
@@ -37,12 +41,18 @@ function draw() {
     canvas.clear();
     bricks.forEach((brick, index) => {
         canvas.drawPaddle(brick);
-        if (ball.updateBrick(brick)) bricks.splice(index, 1);
+        if (ball.updateBrick(brick)) {
+            bricks.splice(index, 1);
+            score++;
+        }
     });
     if (!bricks.length) {
         curLevel++;
         bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
     }
+
+    canvas.drawNumberOfLevel(curLevel);
+    canvas.drawScore(score);
     ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle);
     canvas.drawBall(ball);
     paddle.update(directionState, canvas.ctx.width);

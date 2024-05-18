@@ -6,6 +6,10 @@ export class Canvas {
         this.ctx.classList.add("canvas");
         parentElement.appendChild(this.ctx);
         this.canvas = this.ctx.getContext("2d");
+
+        // position os score and level on canvas
+        this.levelPosition = { x: this.ctx.width * .05, y: this.ctx.height * .04 };
+        this.scorePosition = { x: this.ctx.width - (this.ctx.width * .1), y: this.ctx.height * .04 };
     }
 
     drawBall(item) {
@@ -22,6 +26,18 @@ export class Canvas {
         this.canvas.fillStyle = `#8d7370`;
         this.canvas.fill();
         this.canvas.closePath();
+    }
+
+    drawScore(score) {
+        this.canvas.font = '24px Arial';
+        this.canvas.fillStyle = '#8d7370';
+        this.canvas.fillText(`Score: ${score}`, this.scorePosition.x, this.scorePosition.y);
+    }
+
+    drawNumberOfLevel(level) {
+        this.canvas.font = '24px Arial';
+        this.canvas.fillStyle = '#8d7370';
+        this.canvas.fillText(`Level: ${level}`, this.levelPosition.x, this.levelPosition.y);
     }
 
     clear() {
