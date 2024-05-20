@@ -6,3 +6,5 @@
 6. change the rebound angle
 7. remove flashing when updating
 8. counting the score and levels
+9. footer legend
+10. split paddle control between levels
