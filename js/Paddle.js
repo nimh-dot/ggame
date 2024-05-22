@@ -13,4 +13,11 @@ export class Paddle {
             this.x = Math.max(0, this.x - 6);
         }
     }
+
+    reset(x, y, width, height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
 }

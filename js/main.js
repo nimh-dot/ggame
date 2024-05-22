@@ -6,18 +6,18 @@ import { debounce } from './utils.js';
 
 const RADIUS = 10;
 let canvasWrapper = document.getElementById('canvas-wrapper');
-let width = window.innerWidth * 0.9;
+let width = window.innerWidth * 0.7;
 let height = window.innerHeight * 0.7;
 canvasWrapper.style.width = `${width}px`;
 canvasWrapper.style.height = `${height}px`;
 const canvas = new Canvas(canvasWrapper);
 
-const paddleWidth = 220;
+const paddleWidth = window.innerWidth * 0.1;
 const paddleHeight = 20;
 
 const ball = new Ball(~~(width / 2), height - paddleHeight - RADIUS, RADIUS, 3, -3);
 const paddle = new Paddle((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
-const paddleStartX = Math.ceil((window.innerWidth - canvas.ctx.width) / 2) + paddleWidth / 2;
+const paddleStartX = Math.ceil(window.innerWidth * 0.15);
 const paddleEndX = paddleStartX + canvas.ctx.width - paddleWidth + 10;
 
 // bricks layout by levels
@@ -39,6 +39,7 @@ let directionState = { left: false, right: false };
 
 function draw() {
     canvas.clear();
+
     bricks.forEach((brick, index) => {
         canvas.drawPaddle(brick);
         if (ball.updateBrick(brick)) {
@@ -46,13 +47,16 @@ function draw() {
             score++;
         }
     });
+
+    canvas.drawScore(score);
+
+    // level finish sucsefull 
     if (!bricks.length) {
         curLevel++;
-        bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
+        resetGame(intervalID, curLevel)
     }
 
     canvas.drawNumberOfLevel(curLevel);
-    canvas.drawScore(score);
     ball.update(canvas.ctx.width, canvas.ctx.height, intervalID, paddle);
     canvas.drawBall(ball);
     paddle.update(directionState, canvas.ctx.width);
@@ -60,10 +64,6 @@ function draw() {
 };
 
 let intervalID = null;
-
-function startGame() {
-    intervalID = setInterval(draw, 6);
-};
 
 document.addEventListener("keydown", (e) => { directionState = keyDownHandler(e, directionState) }, false);
 document.addEventListener("keyup", (e) => { directionState = keyUpHandler(e, directionState) }, false);
@@ -84,5 +84,43 @@ document.addEventListener('keyup', (e) => {
         }
     }
 });
+
+document.addEventListener("mouseup", (e) => {
+    if (intervalID) {
+        onStop(intervalID);
+        intervalID = null;
+    }
+    else {
+        startGame();
+    }
+}, false);
+
+function startGame() {
+    intervalID = setInterval(draw, 6);
+};
+
+function resetGame(intervalID, level) {
+    clearInterval(intervalID);
+    intervalID = null;
+    paddle.reset((width - paddleWidth) / 2, height - paddleHeight, paddleWidth, paddleHeight);
+    ball.reset(~~(width / 2), height - paddleHeight - RADIUS, 3, -3);
+
+
+    if (level) {
+        bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
+    }
+    else {
+        score = 0;
+        curLevel = 0;
+        bricks = createLevelBricks(curLevel, canvas.ctx.width, canvas.ctx.height);
+    }
+
+    canvas.clear();
+    canvas.drawBall(ball);
+    canvas.drawPaddle(paddle);
+    canvas.drawNumberOfLevel(curLevel);
+    canvas.drawScore(score);
+    bricks.forEach((brick, index) => canvas.drawPaddle(brick));
+};
 
 export const onStop = (intervalID) => clearInterval(intervalID);

@@ -6,7 +6,12 @@ export class Ball {
         this.radius = radius;
         this.position = { x: x, y: y };
         this.velocity = { dx: dx, dy: dy };
-    }
+    };
+
+    reset(x, y, dx, dy){
+        this.position = { x: x, y: y };
+        this.velocity = { dx: dx, dy: dy };
+    };
 
     update(width, height, intervalID, paddle) {
         if (this.position.x + this.velocity.dx > width - this.radius || this.position.x + this.velocity.dx < this.radius) {

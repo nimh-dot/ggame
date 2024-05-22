@@ -8,8 +8,8 @@ export class Canvas {
         this.canvas = this.ctx.getContext("2d");
 
         // position os score and level on canvas
-        this.levelPosition = { x: this.ctx.width * .05, y: this.ctx.height * .04 };
-        this.scorePosition = { x: this.ctx.width - (this.ctx.width * .1), y: this.ctx.height * .04 };
+        this.levelPosition = { x: this.ctx.width * .05, y: this.ctx.height * .05 };
+        this.scorePosition = { x: this.ctx.width - (this.ctx.width * .15), y: this.ctx.height * .05 };
     }
 
     drawBall(item) {
@@ -37,7 +37,7 @@ export class Canvas {
     drawNumberOfLevel(level) {
         this.canvas.font = '24px Arial';
         this.canvas.fillStyle = '#8d7370';
-        this.canvas.fillText(`Level: ${level}`, this.levelPosition.x, this.levelPosition.y);
+        this.canvas.fillText(`Level: ${level + 1}`, this.levelPosition.x, this.levelPosition.y);
     }
 
     clear() {

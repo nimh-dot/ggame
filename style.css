@@ -1,5 +1,32 @@
+body{
+    color: #584846;
+    background-color: rgb(253, 253, 252);
+    /* font: Arial; */
+    font-family: 'Arial', sans-serif;
+    font-size: 20px;
+}
+
 #canvas-wrapper {
-    margin: 5% auto;
+    margin: 1% auto;
     background-color: antiquewhite;
-    border: 1px solid gray;
+    border: 2px solid gray;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #d6cbca;
+}
+
+.title{
+    font-size: 28px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.description-title{
+    margin: 5px auto;
+    text-align: center;
+    font-size: 20px;
+}
+
+.description-list{
+    width: 40%;
+    margin: 0 auto;
 }
